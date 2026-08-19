@@ -27,7 +27,7 @@ async function bootstrap(): Promise<void> {
 
   const port = process.env.PORT ? Number(process.env.PORT) : 3000;
   await app.listen(port);
-  Logger.log(`Application listening on port ${port} (Swagger at /api/docs)`, 'Bootstrap');
+  Logger.log(`Aplicação rodando na porta ${port} (Swagger em /api/docs)`, 'Bootstrap');
 }
 
 bootstrap();
