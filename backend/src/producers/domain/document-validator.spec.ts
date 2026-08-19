@@ -4,7 +4,7 @@ import { isValidCnpj, isValidCpf, validateDocument } from './document-validator'
 describe('document-validator (CPF/CNPJ)', () => {
   describe('isValidCpf', () => {
     it.each(['11144477735', '52998224725', '111.444.777-35', '529.982.247-25'])(
-      'accepts valid CPF %s',
+      'aceita CPF válido %s',
       (cpf) => {
         expect(isValidCpf(cpf)).toBe(true);
       },
@@ -18,13 +18,13 @@ describe('document-validator (CPF/CNPJ)', () => {
       '1114447773',
       '111444777355',
       '',
-    ])('rejects invalid CPF %s', (cpf) => {
+    ])('rejeita CPF inválido %s', (cpf) => {
       expect(isValidCpf(cpf)).toBe(false);
     });
   });
 
   describe('isValidCnpj', () => {
-    it.each(['11222333000181', '11.222.333/0001-81'])('accepts valid CNPJ %s', (cnpj) => {
+    it.each(['11222333000181', '11.222.333/0001-81'])('aceita CNPJ válido %s', (cnpj) => {
       expect(isValidCnpj(cnpj)).toBe(true);
     });
 
@@ -35,36 +35,36 @@ describe('document-validator (CPF/CNPJ)', () => {
       '1122233300018',
       '112223330001811',
       '',
-    ])('rejects invalid CNPJ %s', (cnpj) => {
+    ])('rejeita CNPJ inválido %s', (cnpj) => {
       expect(isValidCnpj(cnpj)).toBe(false);
     });
   });
 
   describe('validateDocument', () => {
-    it('detects a valid 11-digit document as CPF', () => {
+    it('detecta um documento válido de 11 dígitos como CPF', () => {
       expect(validateDocument('11144477735')).toEqual({ type: 'CPF', digits: '11144477735' });
     });
 
-    it('detects a valid 14-digit document as CNPJ', () => {
+    it('detecta um documento válido de 14 dígitos como CNPJ', () => {
       expect(validateDocument('11222333000181')).toEqual({
         type: 'CNPJ',
         digits: '11222333000181',
       });
     });
 
-    it('strips punctuation before validating', () => {
+    it('remove a pontuação antes de validar', () => {
       expect(validateDocument('529.982.247-25')).toEqual({ type: 'CPF', digits: '52998224725' });
     });
 
-    it('throws InvalidDocumentError for an invalid CPF', () => {
+    it('lança InvalidDocumentError para um CPF inválido', () => {
       expect(() => validateDocument('11111111111')).toThrow(InvalidDocumentError);
     });
 
-    it('throws InvalidDocumentError for an invalid CNPJ', () => {
+    it('lança InvalidDocumentError para um CNPJ inválido', () => {
       expect(() => validateDocument('11222333000100')).toThrow(InvalidDocumentError);
     });
 
-    it('throws InvalidDocumentError for a document with an unsupported length', () => {
+    it('lança InvalidDocumentError para um documento com tamanho não suportado', () => {
       expect(() => validateDocument('12345')).toThrow(InvalidDocumentError);
     });
   });

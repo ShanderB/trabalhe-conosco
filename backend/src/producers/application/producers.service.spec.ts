@@ -22,7 +22,7 @@ describe('ProducersService', () => {
     service = module.get(ProducersService);
   });
 
-  it('normalizes the document to digits-only before persisting a valid CPF', async () => {
+  it('normaliza o documento para apenas dígitos antes de persistir um CPF válido', async () => {
     repository.create.mockResolvedValue({ id: '1', document: '11144477735', name: 'João' });
 
     await service.create({ document: '111.444.777-35', name: 'João' });
@@ -30,12 +30,12 @@ describe('ProducersService', () => {
     expect(repository.create).toHaveBeenCalledWith({ document: '11144477735', name: 'João' });
   });
 
-  it('rejects an invalid document before ever touching the repository', async () => {
+  it('rejeita um documento inválido antes de acessar o repositório', async () => {
     await expect(service.create({ document: '111.444.777-36', name: 'João' })).rejects.toThrow();
     expect(repository.create).not.toHaveBeenCalled();
   });
 
-  it('throws a not-found domain error when the producer does not exist', async () => {
+  it('lança um erro de domínio de não encontrado quando o produtor não existe', async () => {
     repository.findById.mockResolvedValue(null);
 
     await expect(service.findOne('missing-id')).rejects.toThrow(
