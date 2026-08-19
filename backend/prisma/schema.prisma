@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Producer {
+  id        String   @id @default(uuid())
+  document  String   @unique @db.VarChar(14)
+  name      String
+  farms     Farm[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("producers")
+}
+
+model Farm {
+  id               String        @id @default(uuid())
+  producerId       String
+  producer         Producer      @relation(fields: [producerId], references: [id], onDelete: Cascade)
+  name             String
+  city             String
+  state            String        @db.VarChar(2)
+  totalArea        Decimal       @db.Decimal(14, 2)
+  agricultableArea Decimal       @db.Decimal(14, 2)
+  vegetationArea   Decimal       @db.Decimal(14, 2)
+  plantedCrops     PlantedCrop[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@index([producerId])
+  @@index([state])
+  @@map("farms")
+}
+
+model Harvest {
+  id           String        @id @default(uuid())
+  year         Int           @unique
+  plantedCrops PlantedCrop[]
+  createdAt    DateTime      @default(now())
+
+  @@map("harvests")
+}
+
+model PlantedCrop {
+  id        String   @id @default(uuid())
+  farmId    String
+  farm      Farm     @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  harvestId String
+  harvest   Harvest  @relation(fields: [harvestId], references: [id], onDelete: Cascade)
+  cropName  String
+  createdAt DateTime @default(now())
+
+  @@index([farmId])
+  @@index([harvestId])
+  @@index([cropName])
+  @@map("planted_crops")
+}
