@@ -15,8 +15,8 @@ export type UpdateFarmDto = Partial<FarmInputDto>;
 
 export const farmsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    listFarms: builder.query<Farm[], void>({
-      query: () => '/farms',
+    listFarms: builder.query<Farm[], string | void>({
+      query: (producerId) => (producerId ? `/farms?producerId=${encodeURIComponent(producerId)}` : '/farms'),
       providesTags: (result) =>
         result
           ? [...result.map(({ id }) => ({ type: 'Farm' as const, id })), { type: 'Farm' as const, id: 'LIST' }]

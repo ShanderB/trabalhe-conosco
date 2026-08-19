@@ -15,10 +15,10 @@ interface FarmsTableProps {
 const hectares = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 2 });
 
 export function FarmsTable({ producerId, onCreate, onEdit, onManageCrops }: FarmsTableProps) {
-  const { data, isLoading, isFetching, isError } = useListFarmsQuery();
+  const { data, isLoading, isFetching, isError } = useListFarmsQuery(producerId);
   const [deleteFarm, { isLoading: isDeleting }] = useDeleteFarmMutation();
 
-  const farms = (data ?? []).filter((farm) => farm.producerId === producerId);
+  const farms = data ?? [];
 
   const columns: ColumnsType<Farm> = [
     { title: 'Fazenda', dataIndex: 'name', key: 'name' },

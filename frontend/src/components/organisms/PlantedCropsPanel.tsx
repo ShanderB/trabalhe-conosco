@@ -7,6 +7,7 @@ import {
   useDeletePlantedCropMutation,
   useListPlantedCropsQuery,
 } from '../../features/plantedCrops/plantedCropsApi';
+import { getApiErrorMessage } from '../../utils/apiError';
 import type { Farm } from '../../types/domain';
 
 interface PlantedCropsPanelProps {
@@ -24,13 +25,13 @@ export function PlantedCropsPanel({ open, farm, onClose }: PlantedCropsPanelProp
   const [form] = Form.useForm<CropFormValues>();
   const [newHarvestYear, setNewHarvestYear] = useState<number | null>(null);
 
-  const { data: crops } = useListPlantedCropsQuery(undefined, { skip: !open });
+  const { data: crops } = useListPlantedCropsQuery(farm?.id, { skip: !open || !farm });
   const { data: harvests } = useListHarvestsQuery(undefined, { skip: !open });
   const [createCrop, { isLoading: isCreatingCrop }] = useCreatePlantedCropMutation();
   const [deleteCrop] = useDeletePlantedCropMutation();
   const [createHarvest, { isLoading: isCreatingHarvest }] = useCreateHarvestMutation();
 
-  const farmCrops = (crops ?? []).filter((crop) => crop.farmId === farm?.id);
+  const farmCrops = crops ?? [];
   const harvestById = new Map((harvests ?? []).map((harvest) => [harvest.id, harvest]));
 
   async function handleAddCrop() {
@@ -40,8 +41,8 @@ export function PlantedCropsPanel({ open, farm, onClose }: PlantedCropsPanelProp
       await createCrop({ farmId: farm.id, ...values }).unwrap();
       form.resetFields();
       message.success('Cultura adicionada com sucesso.');
-    } catch {
-      message.error('Não foi possível adicionar a cultura.');
+    } catch (error) {
+      message.error(getApiErrorMessage(error, 'Não foi possível adicionar a cultura.'));
     }
   }
 
@@ -52,8 +53,8 @@ export function PlantedCropsPanel({ open, farm, onClose }: PlantedCropsPanelProp
       form.setFieldValue('harvestId', harvest.id);
       setNewHarvestYear(null);
       message.success(`Safra ${harvest.year} cadastrada.`);
-    } catch {
-      message.error('Não foi possível cadastrar a safra.');
+    } catch (error) {
+      message.error(getApiErrorMessage(error, 'Não foi possível cadastrar a safra.'));
     }
   }
 

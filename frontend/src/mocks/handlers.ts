@@ -36,7 +36,11 @@ export const handlers = [
     return new HttpResponse(null, { status: 204 });
   }),
 
-  http.get(url('/farms'), () => HttpResponse.json(db.farms)),
+  http.get(url('/farms'), ({ request }) => {
+    const producerId = new URL(request.url).searchParams.get('producerId');
+    const farms = producerId ? db.farms.filter((farm) => farm.producerId === producerId) : db.farms;
+    return HttpResponse.json(farms);
+  }),
 
   http.post(url('/farms'), async ({ request }) => {
     const body = (await request.json()) as Omit<Farm, 'id' | 'createdAt' | 'updatedAt'>;
@@ -88,7 +92,11 @@ export const handlers = [
     return HttpResponse.json(harvest, { status: 201 });
   }),
 
-  http.get(url('/planted-crops'), () => HttpResponse.json(db.plantedCrops)),
+  http.get(url('/planted-crops'), ({ request }) => {
+    const farmId = new URL(request.url).searchParams.get('farmId');
+    const crops = farmId ? db.plantedCrops.filter((crop) => crop.farmId === farmId) : db.plantedCrops;
+    return HttpResponse.json(crops);
+  }),
 
   http.post(url('/planted-crops'), async ({ request }) => {
     const body = (await request.json()) as Omit<PlantedCrop, 'id'>;

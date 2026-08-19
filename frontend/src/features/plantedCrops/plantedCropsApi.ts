@@ -9,8 +9,8 @@ export interface CreatePlantedCropDto {
 
 export const plantedCropsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    listPlantedCrops: builder.query<PlantedCrop[], void>({
-      query: () => '/planted-crops',
+    listPlantedCrops: builder.query<PlantedCrop[], string | void>({
+      query: (farmId) => (farmId ? `/planted-crops?farmId=${encodeURIComponent(farmId)}` : '/planted-crops'),
       providesTags: (result) =>
         result
           ? [
