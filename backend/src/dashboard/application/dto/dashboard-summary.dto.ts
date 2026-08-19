@@ -12,7 +12,10 @@ export class CropCountDto {
   @ApiProperty({ example: 'Soja' })
   crop!: string;
 
-  @ApiProperty({ example: 5 })
+  @ApiProperty({
+    example: 5,
+    description: 'Quantidade de registros de plantio dessa cultura (contagem, não soma de hectares).',
+  })
   count!: number;
 }
 
