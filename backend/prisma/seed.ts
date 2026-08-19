@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Seeding database...');
+  console.log('Populando banco de dados...');
 
   await prisma.plantedCrop.deleteMany();
   await prisma.harvest.deleteMany();
@@ -89,7 +89,7 @@ async function main() {
     ],
   });
 
-  console.log('Seed finished.');
+  console.log('Seed finalizado.');
 }
 
 main()
