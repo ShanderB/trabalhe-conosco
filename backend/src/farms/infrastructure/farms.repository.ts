@@ -10,8 +10,11 @@ export class FarmsRepository {
     return this.prisma.farm.create({ data });
   }
 
-  findAll(): Promise<Farm[]> {
-    return this.prisma.farm.findMany({ orderBy: { createdAt: 'desc' } });
+  findAll(producerId?: string): Promise<Farm[]> {
+    return this.prisma.farm.findMany({
+      where: producerId ? { producerId } : undefined,
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
   findById(id: string): Promise<Farm | null> {

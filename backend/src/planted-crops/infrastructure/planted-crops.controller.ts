@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreatePlantedCropDto } from '../application/dto/create-planted-crop.dto';
+import { ListPlantedCropsQueryDto } from '../application/dto/list-planted-crops-query.dto';
 import { PlantedCropResponseDto } from '../application/dto/planted-crop-response.dto';
 import { PlantedCropsService } from '../application/planted-crops.service';
 
@@ -16,9 +17,9 @@ export class PlantedCropsController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Lista todas as culturas plantadas.' })
-  findAll(): Promise<PlantedCropResponseDto[]> {
-    return this.plantedCropsService.findAll();
+  @ApiOperation({ summary: 'Lista culturas plantadas, opcionalmente filtradas por fazenda (?farmId=).' })
+  findAll(@Query() query: ListPlantedCropsQueryDto): Promise<PlantedCropResponseDto[]> {
+    return this.plantedCropsService.findAll(query.farmId);
   }
 
   @Delete(':id')

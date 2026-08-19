@@ -25,8 +25,8 @@ export class FarmsService {
     }
   }
 
-  async findAll(): Promise<FarmResponseDto[]> {
-    const farms = await this.repository.findAll();
+  async findAll(producerId?: string): Promise<FarmResponseDto[]> {
+    const farms = await this.repository.findAll(producerId);
     return farms.map(toFarmResponseDto);
   }
 

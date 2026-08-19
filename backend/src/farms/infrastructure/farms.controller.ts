@@ -8,10 +8,12 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateFarmDto } from '../application/dto/create-farm.dto';
 import { FarmResponseDto } from '../application/dto/farm-response.dto';
+import { ListFarmsQueryDto } from '../application/dto/list-farms-query.dto';
 import { UpdateFarmDto } from '../application/dto/update-farm.dto';
 import { FarmsService } from '../application/farms.service';
 
@@ -27,9 +29,9 @@ export class FarmsController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Lista todas as fazendas.' })
-  findAll(): Promise<FarmResponseDto[]> {
-    return this.farmsService.findAll();
+  @ApiOperation({ summary: 'Lista fazendas, opcionalmente filtradas por produtor (?producerId=).' })
+  findAll(@Query() query: ListFarmsQueryDto): Promise<FarmResponseDto[]> {
+    return this.farmsService.findAll(query.producerId);
   }
 
   @Get(':id')

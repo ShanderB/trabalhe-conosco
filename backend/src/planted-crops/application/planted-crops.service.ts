@@ -24,8 +24,8 @@ export class PlantedCropsService {
     }
   }
 
-  findAll(): Promise<PlantedCrop[]> {
-    return this.repository.findAll();
+  findAll(farmId?: string): Promise<PlantedCrop[]> {
+    return this.repository.findAll(farmId);
   }
 
   async remove(id: string): Promise<void> {

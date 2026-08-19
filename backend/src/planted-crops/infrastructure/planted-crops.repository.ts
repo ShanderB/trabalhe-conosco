@@ -10,8 +10,11 @@ export class PlantedCropsRepository {
     return this.prisma.plantedCrop.create({ data });
   }
 
-  findAll(): Promise<PlantedCrop[]> {
-    return this.prisma.plantedCrop.findMany({ orderBy: { createdAt: 'desc' } });
+  findAll(farmId?: string): Promise<PlantedCrop[]> {
+    return this.prisma.plantedCrop.findMany({
+      where: farmId ? { farmId } : undefined,
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
   findById(id: string): Promise<PlantedCrop | null> {
