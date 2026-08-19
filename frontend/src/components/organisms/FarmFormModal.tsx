@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Form, Input, InputNumber, Modal, Select, message } from 'antd';
 import { isValidFarmArea } from '../../utils/areaValidator';
+import { getApiErrorMessage } from '../../utils/apiError';
 import { BRAZIL_STATES } from '../../utils/brazilStates';
 import { useCreateFarmMutation, useUpdateFarmMutation } from '../../features/farms/farmsApi';
 import type { Farm } from '../../types/domain';
@@ -70,8 +71,8 @@ export function FarmFormModal({ open, producerId, farm, onClose }: FarmFormModal
         message.success('Fazenda cadastrada com sucesso.');
       }
       onClose();
-    } catch {
-      message.error('Não foi possível salvar a fazenda. Tente novamente.');
+    } catch (error) {
+      message.error(getApiErrorMessage(error, 'Não foi possível salvar a fazenda. Tente novamente.'));
     }
   }
 
@@ -112,9 +113,16 @@ export function FarmFormModal({ open, producerId, farm, onClose }: FarmFormModal
         <Form.Item
           label="Área total (ha)"
           name="totalArea"
+          dependencies={['agricultableArea', 'vegetationArea']}
           rules={[
             { required: true, message: 'Informe a área total.' },
-            { type: 'number', min: 0, message: 'A área total deve ser maior ou igual a 0.' },
+            {
+              validator: (_rule, value: number) =>
+                value > 0
+                  ? Promise.resolve()
+                  : Promise.reject(new Error('A área total deve ser maior que zero.')),
+            },
+            { validator: validateAreaSum },
           ]}
         >
           <InputNumber<number> style={{ width: '100%' }} min={0} placeholder="0" />

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Form, Input, Modal, message } from 'antd';
 import { formatDocument, isValidDocument, maskDocumentInput } from '../../utils/documentValidator';
+import { getApiErrorMessage } from '../../utils/apiError';
 import {
   useCreateProducerMutation,
   useUpdateProducerMutation,
@@ -44,8 +45,8 @@ export function ProducerFormModal({ open, producer, onClose }: ProducerFormModal
         message.success('Produtor cadastrado com sucesso.');
       }
       onClose();
-    } catch {
-      message.error('Não foi possível salvar o produtor. Tente novamente.');
+    } catch (error) {
+      message.error(getApiErrorMessage(error, 'Não foi possível salvar o produtor. Tente novamente.'));
     }
   }
 
