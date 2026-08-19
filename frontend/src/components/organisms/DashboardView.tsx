@@ -50,7 +50,7 @@ export function DashboardView() {
       </StatsRow>
       <ChartsGrid>
         <PieChartCard title="Fazendas por estado" data={byStateData} />
-        <PieChartCard title="Área plantada por cultura" data={byCropData} />
+        <PieChartCard title="Plantios por cultura (quantidade)" data={byCropData} />
         <PieChartCard
           title="Uso do solo (agricultável x vegetação)"
           data={landUseData}
