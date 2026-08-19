@@ -37,6 +37,15 @@ erDiagram
 Regra de negócio central: `agricultableArea + vegetationArea <= totalArea`, validada na camada de
 aplicação (não só no banco) para retornar erro de negócio claro (400) em vez de estourar constraint.
 
+### Culturas plantadas repetidas na mesma fazenda/safra
+
+`PlantedCrop` não tem constraint de unicidade em `(farmId, harvestId, cropName)` — é permitido registrar
+a mesma cultura mais de uma vez para a mesma fazenda na mesma safra. Isso é intencional: o modelo não
+representa talhões/parcelas dentro da fazenda, então uma fazenda que planta a mesma cultura em áreas ou
+sistemas diferentes (ex.: parte irrigada e parte de sequeiro, ou dois plantios em janelas distintas da
+mesma safra) precisa conseguir registrar cada plantio separadamente. Se o domínio evoluir para rastrear
+talhão/área por plantio, essa decisão deve ser revisitada.
+
 ## Camadas (backend)
 
 Cada módulo (`producers`, `farms`, `harvests`, `planted-crops`, `dashboard`) segue:
